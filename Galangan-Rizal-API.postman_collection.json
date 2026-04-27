@@ -1,0 +1,970 @@
+{
+  "info": {
+    "_postman_id": "galangan-rizal-be-collection",
+    "name": "Galangan Rizal API",
+    "description": "Koleksi API Backend Toko Bangunan Galangan Rizal\n\n## Cara Penggunaan\n1. Import file ini ke Postman\n2. Set variable `base_url` sesuai server Anda (default: http://localhost:3000)\n3. Jalankan **Login** terlebih dahulu — token otomatis tersimpan\n4. Semua request yang butuh auth sudah otomatis menggunakan token tersebut",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000", "type": "string" },
+    { "key": "access_token", "value": "", "type": "string" },
+    { "key": "refresh_token", "value": "", "type": "string" },
+    { "key": "product_id", "value": "", "type": "string" },
+    { "key": "category_id", "value": "", "type": "string" },
+    { "key": "brand_id", "value": "", "type": "string" },
+    { "key": "user_id", "value": "", "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{access_token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/health", "host": ["{{base_url}}"], "path": ["api", "health"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Root",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/", "host": ["{{base_url}}"], "path": [""] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('access_token', json.data.access_token);",
+                  "  pm.collectionVariables.set('refresh_token', json.data.refresh_token);",
+                  "  pm.collectionVariables.set('user_id', json.data.user.id);",
+                  "  pm.test('Register berhasil', () => pm.expect(pm.response.code).to.equal(201));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Budi Santoso\",\n  \"email\": \"budi@example.com\",\n  \"password\": \"Budi1234!\",\n  \"phone\": \"08123456789\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/register", "host": ["{{base_url}}"], "path": ["api", "auth", "register"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('access_token', json.data.access_token);",
+                  "  pm.collectionVariables.set('refresh_token', json.data.refresh_token);",
+                  "  pm.collectionVariables.set('user_id', json.data.user.id);",
+                  "  pm.test('Login berhasil', () => pm.expect(pm.response.code).to.equal(200));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@galaganrizal.com\",\n  \"password\": \"Admin123!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api", "auth", "login"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Login (User Biasa)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('access_token', json.data.access_token);",
+                  "  pm.collectionVariables.set('refresh_token', json.data.refresh_token);",
+                  "  pm.test('Login berhasil', () => pm.expect(pm.response.code).to.equal(200));",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"budi@example.com\",\n  \"password\": \"Budi1234!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api", "auth", "login"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const json = pm.response.json();",
+                  "  pm.collectionVariables.set('access_token', json.data.access_token);",
+                  "  pm.collectionVariables.set('refresh_token', json.data.refresh_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refresh_token\": \"{{refresh_token}}\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/refresh-token", "host": ["{{base_url}}"], "path": ["api", "auth", "refresh-token"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/auth/me", "host": ["{{base_url}}"], "path": ["api", "auth", "me"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Update My Profile",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "name", "value": "Budi Santoso Update", "type": "text" },
+                { "key": "phone", "value": "08199887766", "type": "text" },
+                { "key": "address", "value": "Jl. Merdeka No. 10, Jakarta", "type": "text" },
+                { "key": "avatar", "type": "file", "src": [], "disabled": true }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/api/auth/me", "host": ["{{base_url}}"], "path": ["api", "auth", "me"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"current_password\": \"Budi1234!\",\n  \"new_password\": \"Budi5678@\",\n  \"confirm_password\": \"Budi5678@\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/change-password", "host": ["{{base_url}}"], "path": ["api", "auth", "change-password"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/auth/logout", "host": ["{{base_url}}"], "path": ["api", "auth", "logout"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Produk",
+      "item": [
+        {
+          "name": "Public",
+          "item": [
+            {
+              "name": "Get All Products",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/products?page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products"],
+                  "query": [
+                    { "key": "page", "value": "1", "description": "Nomor halaman" },
+                    { "key": "limit", "value": "10", "description": "Jumlah data per halaman" },
+                    { "key": "search", "value": "", "description": "Cari nama / sku", "disabled": true },
+                    { "key": "category_id", "value": "", "description": "Filter kategori (UUID)", "disabled": true },
+                    { "key": "brand_id", "value": "", "description": "Filter brand (UUID)", "disabled": true },
+                    { "key": "min_price", "value": "", "description": "Harga minimum", "disabled": true },
+                    { "key": "max_price", "value": "", "description": "Harga maksimum", "disabled": true },
+                    { "key": "is_active", "value": "true", "description": "true / false", "disabled": true },
+                    { "key": "is_featured", "value": "true", "description": "true / false", "disabled": true },
+                    { "key": "free_shipping", "value": "true", "description": "true / false", "disabled": true },
+                    { "key": "sort", "value": "created_at", "description": "created_at | name | price | rating | sold_count", "disabled": true },
+                    { "key": "order", "value": "DESC", "description": "ASC / DESC", "disabled": true }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Products — Search",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/products?search=semen&page=1&limit=10",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products"],
+                  "query": [
+                    { "key": "search", "value": "semen" },
+                    { "key": "page", "value": "1" },
+                    { "key": "limit", "value": "10" }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Products — Filter Harga",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/products?min_price=50000&max_price=500000&sort=price&order=ASC",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products"],
+                  "query": [
+                    { "key": "min_price", "value": "50000" },
+                    { "key": "max_price", "value": "500000" },
+                    { "key": "sort", "value": "price" },
+                    { "key": "order", "value": "ASC" }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Product Detail (by ID)",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/products/{{product_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products", "{{product_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Product Detail (by Slug)",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/products/semen-tiga-roda-50kg",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products", "semen-tiga-roda-50kg"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Featured Products",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/products/featured?limit=8",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products", "featured"],
+                  "query": [{ "key": "limit", "value": "8" }]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Promo Products",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/products/promo?page=1&limit=12",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products", "promo"],
+                  "query": [
+                    { "key": "page", "value": "1" },
+                    { "key": "limit", "value": "12" }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Admin",
+          "item": [
+            {
+              "name": "Create Product (JSON, tanpa gambar)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {",
+                      "  const json = pm.response.json();",
+                      "  pm.collectionVariables.set('product_id', json.data.id);",
+                      "  pm.test('Produk berhasil dibuat', () => pm.expect(pm.response.code).to.equal(201));",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"name\": \"Semen Tiga Roda 50 Kg\",\n  \"description\": \"Semen Portland tipe I berkualitas tinggi, cocok untuk konstruksi rumah dan gedung. Daya rekat kuat dan tahan lama.\",\n  \"sku\": \"SMN-TR-50KG\",\n  \"price\": 85000,\n  \"promo_price\": 75000,\n  \"stock\": 200,\n  \"unit\": \"sak\",\n  \"weight\": 50,\n  \"shipping_info\": \"Pengiriman 1-3 hari kerja, min. order 10 sak\",\n  \"shipping_days\": 3,\n  \"free_shipping\": false,\n  \"is_active\": true,\n  \"is_featured\": true\n}"
+                },
+                "url": { "raw": "{{base_url}}/api/products", "host": ["{{base_url}}"], "path": ["api", "products"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Product (Form-Data, dengan gambar)",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {",
+                      "  const json = pm.response.json();",
+                      "  pm.collectionVariables.set('product_id', json.data.id);",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "name", "value": "Cat Dinding Dulux 5 Liter Putih", "type": "text" },
+                    { "key": "description", "value": "Cat dinding interior premium berbasis air, mudah diaplikasikan, cepat kering, dan tidak berbau menyengat.", "type": "text" },
+                    { "key": "sku", "value": "CAT-DLX-5L-WHT", "type": "text" },
+                    { "key": "price", "value": "185000", "type": "text" },
+                    { "key": "promo_price", "value": "159000", "type": "text" },
+                    { "key": "stock", "value": "50", "type": "text" },
+                    { "key": "unit", "value": "kaleng", "type": "text" },
+                    { "key": "weight", "value": "5.5", "type": "text" },
+                    { "key": "shipping_info", "value": "Gratis Ongkir min. 2 kaleng", "type": "text" },
+                    { "key": "shipping_days", "value": "2", "type": "text" },
+                    { "key": "free_shipping", "value": "true", "type": "text" },
+                    { "key": "is_active", "value": "true", "type": "text" },
+                    { "key": "is_featured", "value": "false", "type": "text" },
+                    { "key": "images", "type": "file", "src": [], "description": "Upload maks 5 gambar (opsional)" }
+                  ]
+                },
+                "url": { "raw": "{{base_url}}/api/products", "host": ["{{base_url}}"], "path": ["api", "products"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Product",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "name", "value": "Semen Tiga Roda 50 Kg — Update", "type": "text" },
+                    { "key": "price", "value": "87000", "type": "text" },
+                    { "key": "promo_price", "value": "79000", "type": "text" },
+                    { "key": "stock", "value": "180", "type": "text" },
+                    { "key": "is_featured", "value": "true", "type": "text" },
+                    { "key": "images", "type": "file", "src": [], "disabled": true },
+                    { "key": "remove_images", "value": "/uploads/products/old-image.jpg", "type": "text", "disabled": true, "description": "Isi path gambar yang ingin dihapus" }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/products/{{product_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products", "{{product_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Stock — Set Langsung",
+              "request": {
+                "method": "PATCH",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"stock\": 250,\n  \"operation\": \"set\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/products/{{product_id}}/stock",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products", "{{product_id}}", "stock"]
+                },
+                "description": "operation: 'set' | 'add' | 'subtract'"
+              },
+              "response": []
+            },
+            {
+              "name": "Update Stock — Tambah",
+              "request": {
+                "method": "PATCH",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"stock\": 50,\n  \"operation\": \"add\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/products/{{product_id}}/stock",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products", "{{product_id}}", "stock"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Stock — Kurangi",
+              "request": {
+                "method": "PATCH",
+                "header": [{ "key": "Content-Type", "value": "application/json" }],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"stock\": 10,\n  \"operation\": \"subtract\"\n}"
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/products/{{product_id}}/stock",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products", "{{product_id}}", "stock"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Product",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/products/{{product_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "products", "{{product_id}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Kategori",
+      "item": [
+        {
+          "name": "Public",
+          "item": [
+            {
+              "name": "Get All Categories",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/categories",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "categories"],
+                  "query": [
+                    { "key": "is_active", "value": "true", "disabled": true },
+                    { "key": "search", "value": "", "disabled": true },
+                    { "key": "parent_id", "value": "null", "description": "Kirim 'null' untuk hanya parent kategori", "disabled": true }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Root Categories (tanpa parent)",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/categories?parent_id=null",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "categories"],
+                  "query": [{ "key": "parent_id", "value": "null" }]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Category Detail (by ID)",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/categories/{{category_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "categories", "{{category_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Category Detail (by Slug)",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/categories/bahan-bangunan",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "categories", "bahan-bangunan"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Admin",
+          "item": [
+            {
+              "name": "Create Category",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {",
+                      "  const json = pm.response.json();",
+                      "  pm.collectionVariables.set('category_id', json.data.id);",
+                      "  pm.test('Kategori berhasil dibuat', () => pm.expect(pm.response.code).to.equal(201));",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "name", "value": "Peralatan Taman", "type": "text" },
+                    { "key": "description", "value": "Semua kebutuhan berkebun dan taman rumah Anda", "type": "text" },
+                    { "key": "sort_order", "value": "9", "type": "text" },
+                    { "key": "is_active", "value": "true", "type": "text" },
+                    { "key": "parent_id", "value": "", "type": "text", "disabled": true, "description": "Kosongkan jika kategori utama" },
+                    { "key": "image", "type": "file", "src": [], "disabled": true }
+                  ]
+                },
+                "url": { "raw": "{{base_url}}/api/categories", "host": ["{{base_url}}"], "path": ["api", "categories"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Create Sub-Category",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "name", "value": "Pot & Tanaman", "type": "text" },
+                    { "key": "description", "value": "Pot, media tanam, dan tanaman hias", "type": "text" },
+                    { "key": "parent_id", "value": "{{category_id}}", "type": "text" },
+                    { "key": "sort_order", "value": "1", "type": "text" },
+                    { "key": "is_active", "value": "true", "type": "text" }
+                  ]
+                },
+                "url": { "raw": "{{base_url}}/api/categories", "host": ["{{base_url}}"], "path": ["api", "categories"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Category",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "name", "value": "Peralatan Taman & Kebun", "type": "text" },
+                    { "key": "sort_order", "value": "10", "type": "text" },
+                    { "key": "is_active", "value": "true", "type": "text" },
+                    { "key": "image", "type": "file", "src": [], "disabled": true }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/categories/{{category_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "categories", "{{category_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Category",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/categories/{{category_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "categories", "{{category_id}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Brand",
+      "item": [
+        {
+          "name": "Public",
+          "item": [
+            {
+              "name": "Get All Brands",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/brands",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "brands"],
+                  "query": [
+                    { "key": "search", "value": "", "disabled": true },
+                    { "key": "is_active", "value": "true", "disabled": true },
+                    { "key": "page", "value": "1", "disabled": true },
+                    { "key": "limit", "value": "20", "disabled": true }
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Brand Detail (by ID)",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/brands/{{brand_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "brands", "{{brand_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Get Brand Detail (by Slug)",
+              "request": {
+                "auth": { "type": "noauth" },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/brands/bosch",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "brands", "bosch"]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Admin",
+          "item": [
+            {
+              "name": "Create Brand",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if (pm.response.code === 201) {",
+                      "  const json = pm.response.json();",
+                      "  pm.collectionVariables.set('brand_id', json.data.id);",
+                      "  pm.test('Brand berhasil dibuat', () => pm.expect(pm.response.code).to.equal(201));",
+                      "}"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "name", "value": "Makita", "type": "text" },
+                    { "key": "description", "value": "Brand perkakas listrik profesional asal Jepang", "type": "text" },
+                    { "key": "is_active", "value": "true", "type": "text" },
+                    { "key": "logo", "type": "file", "src": [], "disabled": true }
+                  ]
+                },
+                "url": { "raw": "{{base_url}}/api/brands", "host": ["{{base_url}}"], "path": ["api", "brands"] }
+              },
+              "response": []
+            },
+            {
+              "name": "Update Brand",
+              "request": {
+                "method": "PUT",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    { "key": "name", "value": "Makita Indonesia", "type": "text" },
+                    { "key": "description", "value": "Brand perkakas listrik profesional No.1 di dunia", "type": "text" },
+                    { "key": "is_active", "value": "true", "type": "text" },
+                    { "key": "logo", "type": "file", "src": [], "disabled": true }
+                  ]
+                },
+                "url": {
+                  "raw": "{{base_url}}/api/brands/{{brand_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "brands", "{{brand_id}}"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "Delete Brand",
+              "request": {
+                "method": "DELETE",
+                "header": [],
+                "url": {
+                  "raw": "{{base_url}}/api/brands/{{brand_id}}",
+                  "host": ["{{base_url}}"],
+                  "path": ["api", "brands", "{{brand_id}}"]
+                }
+              },
+              "response": []
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pengguna (Admin)",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "role", "value": "", "description": "admin | user", "disabled": true },
+                { "key": "is_active", "value": "true", "disabled": true }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{user_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Budi Santoso (Update)\",\n  \"phone\": \"08198765432\",\n  \"role\": \"user\",\n  \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{user_id}}"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Toggle Aktif / Nonaktif User",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}/toggle-active",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{user_id}}", "toggle-active"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/admin/users/{{user_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["api", "admin", "users", "{{user_id}}"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Error Scenarios",
+      "item": [
+        {
+          "name": "Login — Email Salah",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"tidakada@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api", "auth", "login"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Login — Validasi Gagal (email kosong)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"password\": \"\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api", "auth", "login"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Akses Admin tanpa Token",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/admin/users", "host": ["{{base_url}}"], "path": ["api", "admin", "users"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Route Tidak Ditemukan (404)",
+          "request": {
+            "auth": { "type": "noauth" },
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/api/tidak-ada", "host": ["{{base_url}}"], "path": ["api", "tidak-ada"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Product — Harga Promo > Harga Normal",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Produk Test Error\",\n  \"price\": 100000,\n  \"promo_price\": 200000\n}"
+            },
+            "url": { "raw": "{{base_url}}/api/products", "host": ["{{base_url}}"], "path": ["api", "products"] }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
